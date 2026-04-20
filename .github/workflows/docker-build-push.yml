@@ -13,7 +13,25 @@ env:
   IMAGE_NAME: devops/${{ github.event.repository.name }}
 
 jobs:
+  unit-tests:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run unit tests
+        run: npm test
+
   build-and-push:
+    needs: unit-tests
     runs-on: self-hosted
 
     steps:
