@@ -1,0 +1,245 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap');
+
+:root {
+  --bg-color: #0d0d0d;
+  --text-color: #00ff00; /* Neon green */
+  --highlight-color: #00ffcc;
+  --error-color: #ff3333;
+  --prompt-user: #ff9900;
+  --prompt-domain: #cc33ff;
+  --prompt-path: #33ccff;
+  --font-main: 'Fira Code', monospace;
+  --scanline-color: rgba(0, 255, 0, 0.05);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body, html {
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-main);
+  overflow: hidden;
+  font-size: 14px;
+}
+
+#root {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Scanlines and screen flicker effect */
+.crt::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(18, 16, 16, 0) 50%,
+    var(--scanline-color) 50%
+  );
+  background-size: 100% 4px;
+  z-index: 50;
+  pointer-events: none;
+}
+
+.crt::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.1);
+  opacity: 0;
+  z-index: 50;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.02; }
+  50% { opacity: 0.05; }
+  100% { opacity: 0.02; }
+}
+
+/* Glassmorphism terminal window */
+.terminal-container {
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+  height: 90vh;
+  max-width: 1200px;
+  max-height: 800px;
+  position: relative;
+  z-index: 10;
+  opacity: 1; /* Adjust if adding boot sequence */
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px 8px 0 0;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 255, 0, 0.2);
+  border-bottom: none;
+}
+
+.terminal-buttons {
+  display: flex;
+  gap: 8px;
+  margin-right: 15px;
+}
+
+.terminal-button {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.close { background-color: #ff5f56; }
+.minimize { background-color: #ffbd2e; }
+.maximize { background-color: #27c93f; }
+
+.terminal-title {
+  flex: 1;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  pointer-events: none;
+  margin-right: 50px;
+}
+
+.terminal-body {
+  flex: 1;
+  background: rgba(0, 0, 0, 0.85);
+  border: 1px solid rgba(0, 255, 0, 0.2);
+  border-radius: 0 0 8px 8px;
+  padding: 20px;
+  overflow-y: auto;
+  box-shadow: 0 0 30px rgba(0, 255, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 0, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 255, 0, 0.5);
+}
+
+.output-line {
+  margin-bottom: 5px;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  line-height: 1.5;
+}
+
+.output-error {
+  color: var(--error-color);
+}
+
+.input-line {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.prompt {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.prompt .user { color: var(--prompt-user); }
+.prompt .at { color: white; }
+.prompt .cluster { color: var(--prompt-domain); }
+.prompt .colon { color: white; }
+.prompt .path { color: var(--prompt-path); }
+.prompt .dollar { color: white; margin-left: 2px; text-shadow: none; }
+
+.command-input {
+  background: transparent;
+  border: none;
+  color: var(--text-color);
+  font-family: var(--font-main);
+  font-size: 14px;
+  flex: 1;
+  outline: none;
+  caret-color: transparent; /* We'll use a custom block cursor */
+}
+
+/* Hidden real input, overlaid fake block cursor */
+.input-container {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.fake-input {
+  white-space: pre;
+  position: absolute;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+}
+
+.fake-input span.cursor-block {
+  display: inline-block;
+  width: 10px;
+  height: 18px;
+  background-color: var(--text-color);
+  animation: blink 1s step-end infinite;
+}
+
+.fake-input span.cursor-block.typing {
+  animation: none;
+  opacity: 1;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.glow {
+  text-shadow: 0 0 5px var(--text-color);
+}
+
+/* Boot Sequence */
+.boot-sequence {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #000;
+  z-index: 100;
+  padding: 20px;
+  font-size: 14px;
+  overflow: hidden;
+}
