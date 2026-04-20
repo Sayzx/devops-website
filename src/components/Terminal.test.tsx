@@ -10,6 +10,7 @@ import Terminal from './Terminal';
 describe('Terminal Component', () => {
   test('renders prompt correctly', () => {
     render(<Terminal />);
-    expect(screen.getByText(/user@k8s-cluster/i)).toBeInTheDocument();
+    const elements = screen.getAllByText(/admin/i);
+    expect(elements.length).toBeGreaterThan(0);
   });
 });

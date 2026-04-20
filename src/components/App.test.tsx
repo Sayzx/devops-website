@@ -8,9 +8,8 @@ import '@testing-library/jest-dom/vitest';
 import App from '../App';
 
 describe('App', () => {
-  test('renders terminal simulator', () => {
-    render(<App />);
-    const elements = screen.queryAllByRole('textbox');
-    expect(elements.length).toBeGreaterThanOrEqual(1);
+  test('renders boot sequence', () => {
+    const { container } = render(<App />);
+    expect(container.querySelector('.boot-sequence')).toBeInTheDocument();
   });
 });

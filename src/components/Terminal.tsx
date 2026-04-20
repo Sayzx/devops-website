@@ -24,7 +24,9 @@ const Terminal: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const scrollToBottom = () => {
-    endOfTerminalRef.current?.scrollIntoView({ behavior: 'auto' });
+    if (typeof endOfTerminalRef.current?.scrollIntoView === 'function') {
+      endOfTerminalRef.current.scrollIntoView({ behavior: 'auto' });
+    }
   };
 
   useEffect(() => {
