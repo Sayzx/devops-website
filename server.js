@@ -44,9 +44,9 @@ app.use((req, res, next) => {
 app.use(express.static(join(__dirname, 'dist')));
 
 // Metrics endpoint
-app.get('/metrics', (req, res) => {
+app.get('/metrics', async (req, res) => {
   res.set('Content-Type', register.contentType);
-  res.end(register.metrics());
+  res.end(await register.metrics());
 });
 
 // Health check
