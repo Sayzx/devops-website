@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Terminal from './components/Terminal';
+	import Terminal from './components/Terminal';
 
 function App() {
   const [booting, setBooting] = useState(true);
@@ -12,7 +12,7 @@ function App() {
       'Initializing mock virtualization environment... OK',
       'Setting up file system... OK',
       'Mounting volumes... OK',
-      'Starting terminal services...'
+      'HelloLaTeam Starting terminal services...'
     ];
     
     let currentLine = 0;
