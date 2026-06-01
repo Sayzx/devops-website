@@ -12,7 +12,7 @@ function App() {
       'Initializing mock virtualization environment... OK',
       'Setting up file system... OK',
       'Mounting volumes... OK',
-      'HelloLaTeam Starting terminal services...'
+      'ORAL Starting terminal services...'
     ];
     
     let currentLine = 0;
